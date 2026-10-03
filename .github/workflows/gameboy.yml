@@ -1,0 +1,16 @@
+name: gameboy
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi nodejs npm
+      - run: npm install -g nwlink
+      - name: Recuperer Peanut-GB
+        run: curl -L -o src/peanut_gb.h https://raw.githubusercontent.com/deltabeard/Peanut-GB/master/peanut_gb.h
+      - run: make build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gameboy-nwa
+          path: output/app.nwa
